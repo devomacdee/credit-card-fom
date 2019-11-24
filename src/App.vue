@@ -1,19 +1,19 @@
 <template>
   <v-app>
     <v-content>
-      <CreditCardForm />
+      <CardView />
     </v-content>
   </v-app>
 </template>
 
 <script>
-import CreditCardForm from './components/CreditCardForm'
+import CardView from './views/CardView'
 
 export default {
   name: 'App',
 
   components: {
-    CreditCardForm
+    CardView
   },
 
   data: () => ({

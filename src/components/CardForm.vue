@@ -19,6 +19,7 @@
                 <v-form>
                   <v-text-field
                     v-model="cardNumber"
+                    v-mask="mask"
                     label="Card number"
                     name="card-number"
                     type="text"
@@ -49,6 +50,7 @@
                     <!-- <v-spacer /> -->
                     <v-text-field
                       label="CSV"
+                      v-mask="masks.csv"
                       name="csv"
                       type="text"
                     />
@@ -73,11 +75,10 @@
 </template>
 
 <script>
+import { mask } from 'vue-the-mask'
+
 export default {
   name: 'CreditCardForm',
-  props: {
-    source: String
-  },
   computed: {
     months () {
       let months = []
@@ -103,18 +104,49 @@ export default {
       month: '',
       year: '',
       cardHolder: '',
-      csv: ''
+      csv: '',
+      cardNumber: '',
+      mask: '',
+      masks: {
+        amex: '#### ###### #####',
+        other: '#### #### #### ####',
+        csv: '###'
+      }
     }
-  }
+  },
+  mounted () { this.mask = this.masks.other },
+  watch: {
+    cardNumber (newValue, oldValue) {
+      const regAmex = /^3[47]\d{0,13}$/
+      const other = /^\d{0,16}$/
+
+      if (regAmex.test(newValue)) {
+        this.mask = this.masks.amex
+      } else if (other.test(newValue)) {
+        this.mask = this.masks.other
+      }
+    }
+  },
+  directives: { mask }
 }
 </script>
 <style lang="scss" scoped>
+  form {
+    margin-top: 45px;
+  }
   .expiry {
     display: flex;
     justify-content: space-between;
 
     .v-input {
       max-width: 29%;
+    }
+
+    @media only screen and (max-width: 600px) {
+      flex-direction: column;
+      .v-input {
+        max-width: 100%;
+      }
     }
   }
 </style>
